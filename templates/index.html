@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>HPE Morpheus Enterprise Installer</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<div class="topbar">
+    <span class="hpe-mark">
+        <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" aria-label="HPE">
+            <rect x="0" y="0" width="120" height="40" rx="4" fill="#01A982"/>
+            <text x="60" y="27" text-anchor="middle"
+                  font-family="Arial, Helvetica, sans-serif"
+                  font-weight="800" font-size="20" letter-spacing="1"
+                  fill="#ffffff">HPE</text>
+        </svg>
+        <span class="divider"></span>
+    </span>
+    <span class="product-name">Morpheus Enterprise &mdash; Installer</span>
+</div>
+
+<div class="container">
+
+<h1>HPE Morpheus Enterprise Installer</h1>
+
+<div id="status" class="status">
+    Ready to install.
+</div>
+
+<form id="installForm">
+
+<h2>Operating System</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="os_type">
+Operating System
+</label>
+
+<select id="os_type" name="os_type">
+
+<option value="rhel9" selected>
+RHEL 9
+</option>
+
+<option value="ubuntu">
+Ubuntu / Debian
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<h2>Installation Package</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="package_path">
+Package Path
+</label>
+
+<input
+    type="text"
+    id="package_path"
+    name="package_path"
+    value="/home/morpheusauto/HPE_Morpheus_Enterprise_Appliance.rpm"
+    required
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="package_checksum">
+SHA256 Checksum
+</label>
+
+<input
+    type="text"
+    id="package_checksum"
+    name="package_checksum"
+    value="26c801666b4f00541746f895adc172d5132a74230c93f6c561dc4c8fb63cd252"
+    required
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="checksum_source_url">
+Source Checksum URL (optional)
+</label>
+
+<input
+    type="text"
+    id="checksum_source_url"
+    name="checksum_source_url"
+    placeholder="https://downloads.morpheusdata.com/.../morpheus-appliance.sha256"
+>
+
+</div>
+
+</div>
+
+
+<h2>Appliance Configuration</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="appliance_url">
+Appliance URL
+</label>
+
+<input
+    type="text"
+    id="appliance_url"
+    name="appliance_url"
+    value="https://10.202.148.138"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="hostname">
+Hostname
+</label>
+
+<input
+    type="text"
+    id="hostname"
+    name="hostname"
+    placeholder="morpheus.example.com"
+>
+
+</div>
+
+</div>
+
+
+<h2>Network Configuration</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="ntp_server">
+NTP Server
+</label>
+
+<input
+    type="text"
+    id="ntp_server"
+    name="ntp_server"
+    value="pool.ntp.org"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="dns_servers">
+DNS Servers
+</label>
+
+<input
+    type="text"
+    id="dns_servers"
+    name="dns_servers"
+    value="8.8.8.8,1.1.1.1"
+>
+
+</div>
+
+</div>
+
+
+<div class="form-group">
+
+<label class="checkbox-row">
+
+<input
+    type="checkbox"
+    name="firewall_enabled"
+    value="true"
+    checked
+>
+
+Enable Firewall Configuration
+
+</label>
+
+</div>
+
+
+<div id="selinuxBlock">
+
+<div class="form-group">
+
+<label for="selinux_mode">
+SELinux
+</label>
+
+<select
+    id="selinux_mode"
+    name="selinux_mode"
+>
+
+<option value="disabled" selected>
+Disabled
+</option>
+
+<option value="permissive">
+Permissive
+</option>
+
+<option value="enforcing">
+Enforcing
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<h2>RHEL Subscription</h2>
+
+<div id="rhelBlock">
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="rhel_username">
+Red Hat Username
+</label>
+
+<input
+    type="text"
+    id="rhel_username"
+    name="rhel_username"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="rhel_password">
+Red Hat Password
+</label>
+
+<input
+    type="password"
+    id="rhel_password"
+    name="rhel_password"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+<h2>SSL</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="ssl_cert">
+SSL Certificate Path
+</label>
+
+<input
+    type="text"
+    id="ssl_cert"
+    name="ssl_cert"
+    placeholder="/path/to/server.crt"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="ssl_key">
+SSL Private Key Path
+</label>
+
+<input
+    type="text"
+    id="ssl_key"
+    name="ssl_key"
+    placeholder="/path/to/server.key"
+>
+
+</div>
+
+</div>
+
+
+<h2>Proxy</h2>
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="proxy_host">
+Proxy Host
+</label>
+
+<input
+    type="text"
+    id="proxy_host"
+    name="proxy_host"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="proxy_port">
+Proxy Port
+</label>
+
+<input
+    type="number"
+    id="proxy_port"
+    name="proxy_port"
+    min="1"
+    max="65535"
+>
+
+</div>
+
+</div>
+
+
+<div class="form-row">
+
+<div class="form-group">
+
+<label for="proxy_username">
+Proxy Username
+</label>
+
+<input
+    type="text"
+    id="proxy_username"
+    name="proxy_username"
+>
+
+</div>
+
+<div class="form-group">
+
+<label for="proxy_password">
+Proxy Password
+</label>
+
+<input
+    type="password"
+    id="proxy_password"
+    name="proxy_password"
+>
+
+</div>
+
+</div>
+
+
+<h2>Whitelist</h2>
+
+<div class="form-group">
+
+<label for="whitelist">
+Allowed URLs
+</label>
+
+<textarea
+    id="whitelist"
+    name="whitelist"
+>https://morpheushub.com
+http://morpheus-images.s3.amazonaws.com
+https://morpheus-images.morpheusdata.com
+https://downloads.morpheusdata.com
+https://share.morpheusdata.com/api
+https://dev.mysql.com/downloads
+https://cdn.redhat.com/content/dist/rhel9/9/x86_64/codeready-builder/os
+https://cdn.redhat.com/content/dist/rhel9/9/x86_64/appstream/os
+https://cdn.redhat.com/content/dist/rhel9/9/x86_64/baseos/os
+http://repo.mysql.com/yum/mysql-8.0-community/el/9/x86_64
+http://repo.mysql.com/yum/mysql-connectors-community/el/9/x86_64
+http://repo.mysql.com/yum/mysql-tools-community/el/9/x86_64
+https://mirrors.fedoraproject.org/metalink</textarea>
+
+</div>
+
+
+<br>
+
+<button
+    type="submit"
+    id="installButton"
+>
+Start Morpheus Installation
+</button>
+
+
+<h2>Installation Logs</h2>
+
+<pre id="logBox">Waiting for installation...</pre>
+
+</form>
+
+</div>
+
+<footer class="hpe-footer">
+    &copy; Hewlett Packard Enterprise &mdash; Morpheus Enterprise Installer
+</footer>
+
+
+<script src="/static/main.js"></script>
+
+</body>
+</html>
