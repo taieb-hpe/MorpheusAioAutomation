@@ -39,6 +39,90 @@
 
 <form id="installForm">
 
+<!-- ============================================================ -->
+<!-- TARGET: LOCAL OR REMOTE                                      -->
+<!-- ============================================================ -->
+<h2>Installation Target</h2>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="target_mode">Install On</label>
+        <select id="target_mode" name="target_mode">
+            <option value="local" selected>Local (this machine)</option>
+            <option value="remote">Remote (SSH)</option>
+        </select>
+    </div>
+</div>
+
+<div id="remoteBlock">
+
+    <p class="field-hint" style="margin-bottom:12px;">
+        Fill these only when <strong>Install On</strong> is set to <strong>Remote (SSH)</strong>.
+        Leave blank for local install.
+    </p>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="remote_host">Target Host / IP</label>
+            <input
+                type="text"
+                id="remote_host"
+                name="remote_host"
+                placeholder="10.0.0.50 or hostname.example.com"
+            >
+        </div>
+        <div class="form-group">
+            <label for="remote_port">SSH Port</label>
+            <input
+                type="number"
+                id="remote_port"
+                name="remote_port"
+                value="22"
+                min="1"
+                max="65535"
+            >
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="remote_user">SSH User</label>
+            <input
+                type="text"
+                id="remote_user"
+                name="remote_user"
+                placeholder="root or admin user with passwordless sudo"
+            >
+        </div>
+        <div class="form-group">
+            <label for="remote_key_path">SSH Private Key Path (preferred)</label>
+            <input
+                type="text"
+                id="remote_key_path"
+                name="remote_key_path"
+                placeholder="/root/.ssh/id_rsa"
+            >
+            <small class="field-hint">Path on the machine running this installer. Preferred over password.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="remote_password">SSH Password (fallback)</label>
+        <input
+            type="password"
+            id="remote_password"
+            name="remote_password"
+            placeholder="Only if no SSH key is provided"
+        >
+        <small class="field-hint">Requires <code>sshpass</code> on the control host. Key-based auth is strongly recommended.</small>
+    </div>
+
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OPERATING SYSTEM                                             -->
+<!-- ============================================================ -->
 <h2>Operating System</h2>
 
 <div class="form-row">
@@ -66,6 +150,9 @@ Ubuntu / Debian
 </div>
 
 
+<!-- ============================================================ -->
+<!-- PACKAGE                                                      -->
+<!-- ============================================================ -->
 <h2>Installation Package</h2>
 
 <div class="form-row">
@@ -73,7 +160,7 @@ Ubuntu / Debian
 <div class="form-group">
 
 <label for="package_path">
-Package Path
+Package Path (on control host)
 </label>
 
 <input
@@ -89,16 +176,18 @@ Package Path
 <div class="form-group">
 
 <label for="package_checksum">
-SHA256 Checksum
+SHA-512 Checksum
 </label>
 
 <input
     type="text"
     id="package_checksum"
     name="package_checksum"
-    value="26c801666b4f00541746f895adc172d5132a74230c93f6c561dc4c8fb63cd252"
+    placeholder="128 hexadecimal characters"
     required
 >
+
+</div>
 
 </div>
 
@@ -112,14 +201,15 @@ Source Checksum URL (optional)
     type="text"
     id="checksum_source_url"
     name="checksum_source_url"
-    placeholder="https://downloads.morpheusdata.com/.../morpheus-appliance.sha256"
+    placeholder="https://downloads.morpheusdata.com/.../morpheus-appliance.sha512"
 >
 
 </div>
 
-</div>
 
-
+<!-- ============================================================ -->
+<!-- APPLIANCE                                                    -->
+<!-- ============================================================ -->
 <h2>Appliance Configuration</h2>
 
 <div class="form-row">
@@ -157,6 +247,9 @@ Hostname
 </div>
 
 
+<!-- ============================================================ -->
+<!-- NETWORK                                                      -->
+<!-- ============================================================ -->
 <h2>Network Configuration</h2>
 
 <div class="form-row">
@@ -244,6 +337,9 @@ Enforcing
 </div>
 
 
+<!-- ============================================================ -->
+<!-- RHEL SUBSCRIPTION                                            -->
+<!-- ============================================================ -->
 <h2>RHEL Subscription</h2>
 
 <div id="rhelBlock">
@@ -283,6 +379,9 @@ Red Hat Password
 </div>
 
 
+<!-- ============================================================ -->
+<!-- SSL                                                          -->
+<!-- ============================================================ -->
 <h2>SSL</h2>
 
 <div class="form-row">
@@ -290,7 +389,7 @@ Red Hat Password
 <div class="form-group">
 
 <label for="ssl_cert">
-SSL Certificate Path
+SSL Certificate Path (on control host)
 </label>
 
 <input
@@ -305,7 +404,7 @@ SSL Certificate Path
 <div class="form-group">
 
 <label for="ssl_key">
-SSL Private Key Path
+SSL Private Key Path (on control host)
 </label>
 
 <input
@@ -320,6 +419,9 @@ SSL Private Key Path
 </div>
 
 
+<!-- ============================================================ -->
+<!-- PROXY                                                        -->
+<!-- ============================================================ -->
 <h2>Proxy</h2>
 
 <div class="form-row">
@@ -390,12 +492,15 @@ Proxy Password
 </div>
 
 
+<!-- ============================================================ -->
+<!-- WHITELIST                                                    -->
+<!-- ============================================================ -->
 <h2>Whitelist</h2>
 
 <div class="form-group">
 
 <label for="whitelist">
-Allowed URLs
+Allowed URLs (checked from the target machine)
 </label>
 
 <textarea
@@ -415,6 +520,35 @@ http://repo.mysql.com/yum/mysql-connectors-community/el/9/x86_64
 http://repo.mysql.com/yum/mysql-tools-community/el/9/x86_64
 https://mirrors.fedoraproject.org/metalink</textarea>
 
+</div>
+
+<div class="form-group">
+<label class="checkbox-row">
+<input
+    type="checkbox"
+    name="whitelist_strict"
+    value="true"
+>
+Strict whitelist — abort install if any entry fails
+</label>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- OPTIONS                                                      -->
+<!-- ============================================================ -->
+<h2>Options</h2>
+
+<div class="form-group">
+<label class="checkbox-row">
+<input
+    type="checkbox"
+    name="cleanse_existing"
+    value="yes"
+    checked
+>
+Automatically cleanse any existing Morpheus installation (destructive)
+</label>
 </div>
 
 
