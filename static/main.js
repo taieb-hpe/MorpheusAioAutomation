@@ -1,4 +1,3 @@
-
 const form = document.getElementById("installForm");
 const installButton = document.getElementById("installButton");
 const logBox = document.getElementById("logBox");
@@ -132,11 +131,41 @@ form.addEventListener(
     "submit",
     async function(event) {
 
-        // THIS IS THE IMPORTANT FIX.
         // Prevent normal browser form submission.
         event.preventDefault();
 
         if (polling) {
+            return;
+        }
+
+        // Client-side validation for remote mode
+        const targetMode = document.getElementById("target_mode").value;
+        if (targetMode === "remote") {
+            const host = document.getElementById("remote_host").value.trim();
+            const user = document.getElementById("remote_user").value.trim();
+            const key  = document.getElementById("remote_key_path").value.trim();
+            const pass = document.getElementById("remote_password").value;
+            if (!host) {
+                statusBox.textContent = "Remote host / IP is required.";
+                return;
+            }
+            if (!user) {
+                statusBox.textContent = "SSH user is required for remote install.";
+                return;
+            }
+            if (!key && !pass) {
+                statusBox.textContent =
+                    "Provide either an SSH private key path or a password.";
+                return;
+            }
+        }
+
+        // SHA-512 length check
+        const checksum = document.getElementById("package_checksum").value.trim();
+        if (checksum && checksum.length !== 128) {
+            statusBox.textContent =
+                "SHA-512 checksum must be exactly 128 hexadecimal characters " +
+                "(got " + checksum.length + ").";
             return;
         }
 
@@ -171,6 +200,7 @@ form.addEventListener(
             if (!response.ok) {
 
                 throw new Error(
+                    data.message ||
                     data.detail ||
                     "Installation request failed."
                 );
@@ -200,5 +230,5 @@ form.addEventListener(
 );
 
 
+// Initialise UI state
 toggleOSFields();
-
